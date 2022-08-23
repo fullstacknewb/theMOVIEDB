@@ -1,0 +1,54 @@
+﻿@page
+@model IndexModel
+
+<div id="searchDiv">
+    <form id="movieSearch" method="POST" asp-page-handler="MovieSearch">
+        <input id="searchBox" type="text" name="search" placeholder="type the movie name...">
+        <input type="submit" value="find movie">
+    </form>
+</div>
+
+<div id="searchResults">
+    @if(Model.fetch.posterSet!= null) {
+        for(int i = 0; i < Model.fetch.posterSet.results.Count; i++){
+         string path = "https://image.tmdb.org/t/p/w500" + Model.fetch.posterSet.results.ElementAt(i).poster_path;
+        <form method = "POST" asp-page-handler = "MovieDetails">
+            <div class="thumbnail" style="background: url(@path); background-size: 100%;">
+                <input class="imageBtn" name="movieID" type="submit" value="@Model.fetch.posterSet.results.ElementAt(i).id">
+            </div>
+        </form>
+    }
+}
+</div>
+    @if(Model.fetch.movie != null){
+        <div id="movieDetails">
+            <h1>Title: @Model.fetch.movie.title</h1>
+            <h3>Popularity: @Model.fetch.movie.popularity</h3>
+
+            @if(Model.fetch.videoSet.results.Count > 0) {
+            for(int i = 0; i < Model.maxVideos; i++) {
+                string youtubePath = "https://www.youtube.com/embed/" + @Model.fetch.videoSet.results[i].key;
+                <iframe class="trailer" src="@youtubePath" title="YouTube video player" 
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            }
+        }
+        <div class="castDiv">
+            @for(int i = 0; i < Model.maxCast; i++) {
+               string path = "https://image.tmdb.org/t/p/w500/" + Model.fetch.castSet.cast.ElementAt(i).profile_path; 
+                <div class= "castImg" style="background: url(@path); background-size: 100%;">
+                 <form method="POST" asp-page-handler="GetActor">
+              <input class="imageBtn" name="actorID" type="submit" value="@Model.fetch.castSet.cast.ElementAt(i).id">
+            </form>
+                </div>
+            }
+           </div> 
+        </div>
+    } <!--if
+    
+
+
+
+
+
